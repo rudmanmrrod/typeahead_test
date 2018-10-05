@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Typeahead Test</title>
+	<meta charset="utf-8">
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/typeahead.bundle.min.js"></script>
+</head>
+<body>
+	<input type="text" name="search" id="type_search">
+	<div class="content"></div>
+</body>
+<script>
+	$(document).ready(function(){
+		var githubRepos = new Bloodhound({
+		  datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+		  queryTokenizer: Bloodhound.tokenizers.whitespace,
+		  prefetch: 'https://api.github.com/users/rudmanmrrod/repos',
+		});
+
+		$('#type_search').typeahead(null, {
+		  //name: 'best-pictures',
+		  display: 'name',
+		  source: githubRepos,
+		}).on('typeahead:selected typeahead:autocompleted', function(e, data) {
+      $('.content').html(); 
+      var html = '<b>Name</b>: '+data.name;
+      html += '<b>Description</b>: '+data.description;
+      var private = data.private ? 'Yes':'No'
+      html += '<b>Private</b>: '+private;
+      html += '<b>Language</b>: '+data.language;
+      html += '<b>Stars</b>: '+data.stargazers_count;
+      html += '<b>Forks</b>: '+data.forks;
+      $('.content').html(html); 
+    });
+	});
+</script>
+</html>
